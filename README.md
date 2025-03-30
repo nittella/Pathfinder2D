@@ -237,12 +237,12 @@ Heap<Node> opened = new Heap<Node>(_weightedMap.Count);
 
 ---
 
-### **Usage of `Pathfinder2D` in a Game**
+### **Usage example of `Pathfinder2D` **
 
-Here's how the `Pathfinder2D` class can be used within a `GameManager`:
+Here's how the `Pathfinder2D` class can be used:
 
 ```csharp
-public class ExampleGameManager : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
     public Tilemap pathTilemap; // Tilemap to show a path
     public Tilemap mazeTileMap; // Tilemap with walkable cells
