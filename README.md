@@ -244,9 +244,12 @@ Here's how the `Pathfinder2D` class can be used within a `GameManager`:
 ```csharp
 public class ExampleGameManager : MonoBehaviour
 {
+    public Tilemap pathTilemap; //tilemap displaying path
+    public Tilemap mazeTileMap; //tilemap with cells where player can move
+
     private List<Vector2Int> path;
-    private bool isDestinationReached = true;
     private Pathfinder2D pathfinder;
+
     
     void Start()
     {
@@ -266,5 +269,4 @@ public class ExampleGameManager : MonoBehaviour
     }
 }
 ```
-
 - The `GameManager` interacts with the `Pathfinder2D` class to find paths by calling `FindPath()`. The `pathfinder` uses the `Heap<T>` to efficiently find the optimal path from the start to the end using A*.
