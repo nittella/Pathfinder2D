@@ -242,6 +242,10 @@ Heap<Node> opened = new Heap<Node>(_weightedMap.Count);
 Here's how the `Pathfinder2D` class can be used within a `GameManager`:
 
 ```csharp
+    private List<Vector2Int> path;
+    private bool isDestinationReached = true;
+    private Pathfinder2D pathfinder;
+
 void Start()
 {
     Dictionary<Vector2Int, float> weightedTilemap = GetWeightedTilemap();
@@ -251,17 +255,10 @@ void Start()
 
 void Update()
 {
-    if (Input.GetMouseButtonDown(0) && isDestinationReached)
-    {
-        OnMouseDown();
-    }
-    if (isDestinationReached)
-    {
-        Vector2Int start = (Vector2Int)pathTilemap.WorldToCell(player.transform.position);
-        Vector2Int end = (Vector2Int)pathTilemap.WorldToCell(mousePosition);
-        path = pathfinder.FindPath(start, end);
-        ShowPath();
-    }
+    Vector2Int start = (Vector2Int)pathTilemap.WorldToCell(player.transform.position);
+    Vector2Int end = (Vector2Int)pathTilemap.WorldToCell(mousePosition);
+    path = pathfinder.FindPath(start, end);
+    ShowPath();
 }
 ```
 
