@@ -244,8 +244,8 @@ Here's how the `Pathfinder2D` class can be used within a `GameManager`:
 ```csharp
 public class ExampleGameManager : MonoBehaviour
 {
-    public Tilemap pathTilemap; //tilemap displaying path
-    public Tilemap mazeTileMap; //tilemap with cells where player can move
+    public Tilemap pathTilemap; // Tilemap to show a path
+    public Tilemap mazeTileMap; // Tilemap with walkable cells
 
     private List<Vector2Int> path;
     private Pathfinder2D pathfinder;
