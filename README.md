@@ -1,272 +1,106 @@
-# Pathfinder2D
-The Pathfinder2D class implements a pathfinding system for a 2D grid-based environment using a weighted graph approach. This class uses the A* (A-star) algorithm to find the shortest path from a start position to a target position. It supports including rectangular grids (both with and without diagonals) and hexagonal grids.
-Certainly! Here's the updated Pathfinder documentation with the inclusion of the `Heap<T>` class documentation. I've integrated both the `Pathfinder2D` and `Heap<T>` documentation in one cohesive document.
+# Pathfinder2D Documentation
 
-#### Namespace: `KwaaktjePathfinder2D`
-
----
-
-### **Pathfinder2D Class**
-
-The `Pathfinder2D` class implements a pathfinding system for a 2D grid-based environment using a weighted graph approach. This class uses the A* (A-star) algorithm to find the shortest path from a start position to a target position. It supports different node connection types, including rectangular grids (both with and without diagonals) and hexagonal grids.
+## Overview
+The `Pathfinder2D` system provides a pathfinding algorithm for a 2D grid-based environment using a weighted graph approach. It determines the shortest path between two points, considering movement costs and obstacles.
 
 ---
 
-#### **Constructor:**
+## Namespaces and Dependencies
+The `KwaaktjePathfinder2D` namespace includes classes and enumerations for pathfinding operations. The implementation relies on Unity's `Vector2Int`, mathematical operations, and heap-based priority queue structures.
 
+---
+
+## Enumerations
+### `Pathfinder2DResultStatus`
+Defines the possible results of a pathfinding attempt:
+- `SUCCESS`: A valid path was found.
+- `NOT_FOUND`: No valid path exists.
+
+### `NodeConnectionType`
+Specifies how nodes connect within the grid:
+- `RectangleWithDiagonals`: Allows diagonal movement.
+- `RectangleNoDiagonals`: Restricts movement to vertical and horizontal directions.
+- `Hexagone`: Uses a hexagonal grid connection model.
+
+---
+
+## Structs
+### `Pathfinder2DResult`
+Represents the outcome of a pathfinding request.
+
+**Fields:**
+- `List<Vector2Int> Path`: Stores the sequence of grid positions forming the computed path.
+- `Pathfinder2DResultStatus Status`: Indicates success or failure.
+- `float weightedDistance`: The total weighted cost of the path.
+- `float distance`: The number of steps in the path.
+
+---
+
+## Classes
+
+### `Node`
+Represents a grid node used in the pathfinding process.
+
+**Fields:**
+- `Vector2Int Vector`: The position of the node.
+- `float FactDistanceFromStart`: The actual distance from the starting node.
+- `float EmpiricalDistanceToEnd`: The estimated distance to the target node.
+- `Node Parent`: Reference to the previous node in the path.
+- `int Index`: Heap index for priority queue operations.
+
+**Methods:**
+- `float GetTotalDistance()`: Returns the sum of actual and estimated distances.
+- `int CompareTo(Node other)`: Compares nodes based on their total distances.
+
+---
+
+### `Pathfinder2D`
+Handles pathfinding operations within a 2D grid.
+
+**Fields:**
+- `Dictionary<Vector2Int, float> _weightedMap`: Stores movement costs per grid position.
+- `List<Vector2Int> _movementBlockers`: Contains positions that block movement.
+- `NodeConnectionType _nodeConnectionType`: Determines how nodes connect.
+
+**Constructors:**
+- `Pathfinder2D(Dictionary<Vector2Int, float> weightedMap, List<Vector2Int> movementBlockers, NodeConnectionType nodeConnectionType)`: Initializes pathfinding with movement costs, obstacles, and connection type.
+- `Pathfinder2D(Dictionary<Vector2Int, float> weightedMap, NodeConnectionType nodeConnectionType)`: Initializes without movement blockers.
+
+**Methods:**
+- `Pathfinder2DResult FindPath(Vector2Int start, Vector2Int end)`: Finds the shortest path between two points.
+- `private float GetEmpiricalDistanceToEndPoint(Vector2Int node, Vector2Int end)`: Estimates the distance from a node to the endpoint.
+- `private bool IsEligibleNode(Vector2Int node)`: Checks if a node is traversable.
+- `private List<Vector2Int> GetConnectedVectors(Vector2Int vector)`: Returns a list of adjacent valid positions based on the connection type.
+
+---
+
+## Usage
 ```csharp
-public Pathfinder2D(Dictionary<Vector2Int, float> weightedMap, List<Vector2Int> movementBlockers, NodeConnectionType nodeConnectionType)
-```
-
-**Description:**
-- Initializes the `Pathfinder2D` with a weighted grid, a list of movement blockers, and a node connection type (Rectangle with or without diagonals or Hexagonal).
-- `weightedMap`: Dictionary mapping grid positions to movement costs.
-- `movementBlockers`: List of grid positions that block movement (obstacles).
-- `nodeConnectionType`: Defines how nodes are connected in the grid (with or without diagonals, or hexagonal).
-
----
-
-```csharp
-public Pathfinder2D(Dictionary<Vector2Int, float> weightedMap, NodeConnectionType nodeConnectionType)
-```
-
-**Description:**
-- Initializes the `Pathfinder2D` with a weighted grid and a node connection type without any movement blockers.
-- `weightedMap`: Dictionary mapping grid positions to movement costs.
-- `nodeConnectionType`: Defines how nodes are connected in the grid (with or without diagonals, or hexagonal).
-
----
-
-#### **Method:**
-
-```csharp
-public List<Vector2Int> FindPath(Vector2Int start, Vector2Int end)
-```
-
-**Description:**
-- Finds the shortest path from the start position to the end position using the A* algorithm.
-- Returns a list of grid positions representing the path from start to end, or an empty list if no valid path exists.
-
----
-
-#### **Private Helper Methods:**
-
-```csharp
-private float GetEmpiricalDistanceToEndPoint(Vector2Int node, Vector2Int end)
-```
-
-**Description:**
-- Calculates the empirical distance (straight-line distance) from a node to the endpoint using the Euclidean distance formula.
-
----
-
-```csharp
-private bool IsEligibleNode(Vector2Int node)
-```
-
-**Description:**
-- Checks if a node is eligible for pathfinding (i.e., it exists in the weighted map and is not a movement blocker).
-
----
-
-```csharp
-private List<Vector2Int> GetConnectedVectors(Vector2Int vector)
-```
-
-**Description:**
-- Gets the list of neighboring grid positions (nodes) that are connected to the current node based on the specified connection type (rectangle with or without diagonals, hexagonal).
-
----
-
-### **Heap<T> Class**
-
-The `Heap<T>` class is a generic implementation of a heap (priority queue) data structure. It is used internally in the pathfinding algorithm for efficient retrieval of the highest-priority node, allowing quick access to the node with the lowest total cost.
-
-#### **Constructor:**
-
-```csharp
-public Heap(int size)
-```
-
-**Description:**
-- Initializes a new heap with a predefined size.
-- `size`: The maximum number of elements the heap can store.
-
----
-
-#### **Method:**
-
-```csharp
-public int Count { get; }
-```
-
-**Description:**
-- Gets the current number of elements in the heap.
-
----
-
-```csharp
-public void Add(T item)
-```
-
-**Description:**
-- Adds an item to the heap while maintaining the heap property (highest-priority item at the root).
-- The heap will reorder itself to ensure that the highest-priority item is always at index 0.
-
----
-
-```csharp
-public T Pop()
-```
-
-**Description:**
-- Removes and returns the highest-priority item from the heap (the root).
-- After removal, the heap reorders itself to maintain the heap property.
-
----
-
-```csharp
-public bool Contains(T item)
-```
-
-**Description:**
-- Checks whether the heap contains a specific item.
-- Returns `true` if the item exists in the heap, `false` otherwise.
-
----
-
-```csharp
-public void Update(T item)
-```
-
-**Description:**
-- Updates the priority of an item in the heap, ensuring the heap property is maintained.
-- Used when a node's cost changes in pathfinding (e.g., when a better path is found).
-
----
-
-#### **Private Helper Methods:**
-
-```csharp
-private int GetLeftChildIndex(T item)
-```
-
-**Description:**
-- Returns the index of the left child of the given item.
-
----
-
-```csharp
-private int GetRightChildIndex(T item)
-```
-
-**Description:**
-- Returns the index of the right child of the given item.
-
----
-
-```csharp
-private T GetParent(T item)
-```
-
-**Description:**
-- Returns the parent of the given item.
-
----
-
-```csharp
-private void SortDown(T item)
-```
-
-**Description:**
-- Reorders the heap from top to bottom (starting at the root) to maintain the heap property.
-
----
-
-```csharp
-private void SortUp(T item)
-```
-
-**Description:**
-- Reorders the heap from bottom to top (starting at the leaf node) to maintain the heap property.
-
----
-
-```csharp
-private void Swap(T item1, T item2)
-```
-
-**Description:**
-- Swaps the positions of two items in the heap.
-
----
-
-### **IHeapItem<T> Interface**
-
-This interface defines items that can be stored in a heap and supports priority-based comparisons.
-
-#### **Method:**
-
-```csharp
-int Index { get; set; }
-```
-
-**Description:**
-- Gets or sets the index of the item within the heap. The heap uses this to maintain the item's position.
-
----
-
-```csharp
-int CompareTo(T other)
-```
-
-**Description:**
-- Compares the current item to another item to determine their priority (used to maintain the heap property).
-
----
-
-### Example Usage in `GameManager`
-
-Here’s how the `Heap<T>` class is used inside the `Pathfinder2D` class for pathfinding:
-
-```csharp
-Heap<Node> opened = new Heap<Node>(_weightedMap.Count);
-```
-
-- A `Heap<Node>` is created to efficiently store nodes that need to be processed. The nodes are prioritized based on their total cost (fact distance + empirical distance).
-
----
-
-### **Usage example of `Pathfinder2D` **
-
-Here's how the `Pathfinder2D` class can be used:
-
-```csharp
-public class GameManager : MonoBehaviour
+void Start()
 {
-    public Tilemap pathTilemap; // Tilemap to show a path
-    public Tilemap mazeTileMap; // Tilemap with walkable cells
+    path = new();
+    Dictionary<Vector2Int, float> weightedTilemap = GetWeightedTilemap();
+    NodeConnectionType connectionType = NodeConnectionType.RectangleWithDiagonals;
+    pathfinder = new Pathfinder2D(weightedTilemap, connectionType);
+}
 
-    private List<Vector2Int> path;
-    private Pathfinder2D pathfinder;
+void Update()
+{
+    Vector3 cursorPosition = camera.ScreenToWorldPoint(Input.mousePosition);
+    Vector2Int cursorCell = (Vector2Int)pathTilemap.WorldToCell(cursorPosition);
+    Vector2Int playerCell = (Vector2Int)pathTilemap.WorldToCell(player.gameObject.transform.position);
+    Pathfinder2DResult pathResult = pathfinder.FindPath(playerCell, cursorCell);
+    path = pathResult.Path;
+    pathTilemap.ClearAllTiles();
+    ShowPath();
+    UpdateDistance(pathResult.distance);
+    UpdateWeightedDistance(pathResult.weightedDistance);
 
-    
-    void Start()
-    {
-        Dictionary<Vector2Int, float> weightedTilemap = GetWeightedTilemap();
-        NodeConnectionType connectionType = NodeConnectionType.RectangleWithDiagonals;
-        pathfinder = new Pathfinder2D(weightedTilemap, connectionType);
-    }
-    
-    void Update()
-    {
-       Vector3 cursorPosition = camera.ScreenToWorldPoint(Input.mousePosition);
-       Vector2Int cursorCell = (Vector2Int)pathTilemap.WorldToCell(cursorPosition);
-       Vector2Int playerCell = (Vector2Int)pathTilemap.WorldToCell(player.gameObject.transform.position);
-       path = pathfinder.FindPath(playerCell, cursorCell);
-       pathTilemap.ClearAllTiles();
-       ShowPath();
-    }
 }
 ```
-- The `GameManager` interacts with the `Pathfinder2D` class to find paths by calling `FindPath()`. The `pathfinder` uses the `Heap<T>` to efficiently find the optimal path from the start to the end using A*.
+
+---
+
+## Conclusion
+`Pathfinder2D` provides a flexible and efficient way to compute paths in a grid-based 2D environment, considering movement costs and obstacles. It is suitable for game AI and simulation applications that require pathfinding solutions.
+
