@@ -5,11 +5,6 @@ The `Pathfinder2D` system provides a pathfinding algorithm for a 2D grid-based e
 
 ---
 
-## Namespaces and Dependencies
-The `KwaaktjePathfinder2D` namespace includes classes and enumerations for pathfinding operations. The implementation relies on Unity's `Vector2Int`, mathematical operations, and heap-based priority queue structures.
-
----
-
 ## Enumerations
 ### `Pathfinder2DResultStatus`
 Defines the possible results of a pathfinding attempt:
